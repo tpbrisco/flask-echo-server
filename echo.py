@@ -4,6 +4,7 @@ from werkzeug.routing import Rule
 from optparse import OptionParser
 from pprint import pprint
 import time
+import os
 
 VERBOSE = 'verbose'
 BASIC_AUTH = 'basic_auth'
@@ -96,10 +97,13 @@ def main():
     parser.add_option('--debug', dest='debug',
         default=False, action='store_true', help='enable debug mode in flask')
 
+    parser.add_option('--portenv', dest='portenv', default='', help='environment variable that contains port to run server on')
     (options, args) = parser.parse_args()
 
     config[VERBOSE] = options.verbose
 
+    if options.portenv:
+        options.port = int(os.getenv(options.portenv))
     if options.auth:
         username, password = options.auth.split(':')
         if username is None or password is None:
