@@ -2,4 +2,5 @@ applications:
 - name: echo
   memory: 128M
   instances: 1
-  buildpack: python_buildpack
+  buildpacks:
+    - python_buildpack
