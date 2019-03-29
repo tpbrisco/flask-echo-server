@@ -1,1 +1,3 @@
 Flask
+jaeger_client
+opentracing==1.3.0

@@ -4,6 +4,12 @@ from werkzeug.routing import Rule
 from optparse import OptionParser
 from pprint import pprint
 import time
+# jaeger opentracing from here down
+import logging
+import os
+from jaeger_client import Config
+from opentracing.ext import tags
+from opentracing.propagation import Format
 
 VERBOSE = 'verbose'
 BASIC_AUTH = 'basic_auth'
@@ -15,7 +21,22 @@ config = {
     VERBOSE: False
 }
 
+def init_tracer(service):
+    logging.getLogger('').handlers = []
+    logging.basicConfig(format='%(message)s', level=logging.DEBUG)
+    JAEGER_HOST = os.getenv('JAEGER_HOST', 'localhost')
+    config = Config(
+        config = {
+            'sampler': { 'type': 'const', 'param': 1},
+            'logging': True,
+            'report_batch_size': 1,
+            'local_agent': {'reporting_host': JAEGER_HOST}
+        },
+        service_name=service)
+    return config.initialize_tracer()
+
 app = Flask(__name__)
+tracer = init_tracer('echo')
 
 app.url_map.add(Rule('/', defaults={'path' : ''}, endpoint='index'))
 app.url_map.add(Rule('/<path:path>', endpoint='index'))
@@ -55,6 +76,9 @@ def requires_auth(f):
 @requires_auth
 def echo(path):
 
+    span_ctx = tracer.extract(Format.HTTP_HEADERS, request.headers)
+    span_tags = {tags.SPAN_KIND: tags.SPAN_KIND_RPC_SERVER}
+
     status_code = request.args.get('status') or 200
     status_code = int(status_code)
     if not validate_status_code(status_code):
@@ -82,9 +106,10 @@ def echo(path):
     if config[VERBOSE]:
         pprint(data)
 
-    response = jsonify(data)
-    response.status_code = status_code
-    return response
+    with tracer.start_span('format', child_of=span_ctx, tags=span_tags):
+        response = jsonify(data)
+        response.status_code = status_code
+        return response
 
 def main():
     parser = OptionParser()
