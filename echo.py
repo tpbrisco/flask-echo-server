@@ -24,7 +24,7 @@ config = {
 def init_tracer(service):
     logging.getLogger('').handlers = []
     logging.basicConfig(format='%(message)s', level=logging.DEBUG)
-    JAEGER_HOST = os.getenv('JAEGER_HOST', 'localhost')
+    JAEGER_HOST = os.getenv('JAEGER_HOST_AIO', 'localhost')
     config = Config(
         config = {
             'sampler': { 'type': 'const', 'param': 1},

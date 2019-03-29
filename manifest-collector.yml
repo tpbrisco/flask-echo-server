@@ -1,8 +1,8 @@
 applications:
-- name: collector
+- name: tpb-collector
   memory: 128M
   instances: 1
   buildpacks:
-    - python_buildpack
+    - binary_buildpack
   command:
-    
+    bin/jaeger-collector --collector.http-port ${PORT} --log-level debug --metrics-backend none --span-storage.type memory

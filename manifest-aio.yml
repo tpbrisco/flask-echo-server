@@ -1,0 +1,8 @@
+applications:
+- name: jaeger-aio
+  memory: 128M
+  instances: 1
+  buildpacks:
+    - binary_buildpack
+  command:
+    bin/jaeger-aio --http-server.host-port ${PORT} --log-level debug --metrics-backend none
