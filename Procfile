@@ -1,1 +1,1 @@
-web: python echo.py --port=${PORT} --host=0.0.0.0
+web: bin/start-both.sh
