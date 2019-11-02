@@ -1,1 +1,1 @@
-web: gunicorn --bind=0.0.0.0:${PORT} -c gunicorn.conf echo:app
+web: gunicorn --bind=${VCAP_APP_HOST}:${VCAP_APP_PORT} -c gunicorn.conf echo:app
