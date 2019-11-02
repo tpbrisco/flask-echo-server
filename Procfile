@@ -1,1 +1,1 @@
-web: python echo.py --port=${PORT} --host=0.0.0.0
+web: gunicorn --bind=0.0.0.0:${PORT} -c gunicorn.conf echo:app
