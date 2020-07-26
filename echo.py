@@ -17,7 +17,7 @@ config = {
 
 app = Flask(__name__)
 
-app.url_map.add(Rule('/', defaults={'path' : ''}, endpoint='index'))
+app.url_map.add(Rule('/', defaults={'path': ''}, endpoint='index'))
 app.url_map.add(Rule('/<path:path>', endpoint='index'))
 
 def validate_status_code(status_code):
@@ -61,22 +61,22 @@ def echo(path):
         status_code = 200
 
     data = {
-        'success' : True,
-        'status' : status_code,
-        'time' : time.time(),
-        'path' : request.path,
-        'script_root' : request.script_root,
-        'url' : request.url,
-        'base_url' : request.base_url,
-        'url_root' : request.url_root,
-        'method' : request.method,
-        'headers' : extract(request.headers),
-        'data' : request.data.decode(encoding='UTF-8'),
-        'host' : request.host,
-        'args' : extract(request.args),
-        'form' : extract(request.form),
-        'json' : request.json,
-        'cookies' : extract(request.cookies)
+        'success': True,
+        'status': status_code,
+        'time': time.time(),
+        'path': request.path,
+        'script_root': request.script_root,
+        'url': request.url,
+        'base_url': request.base_url,
+        'url_root': request.url_root,
+        'method': request.method,
+        'headers': extract(request.headers),
+        'data': request.data.decode(encoding='UTF-8'),
+        'host': request.host,
+        'args': extract(request.args),
+        'form': extract(request.form),
+        'json': request.json,
+        'cookies': extract(request.cookies)
     }
 
     if config[VERBOSE]:
