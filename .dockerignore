@@ -1,0 +1,6 @@
+# exclude everything by default
+*
+# include specific stuff
+!echo.py
+!gunicorn.py
+!requirements.txt
